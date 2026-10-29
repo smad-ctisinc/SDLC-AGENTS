@@ -1,0 +1,40 @@
+name: Foundation validation
+
+on:
+  push:
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  foundation:
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-latest, windows-latest]
+        python: ['3.11', '3.13']
+    runs-on: ${{ matrix.os }}
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v6
+        with:
+          persist-credentials: false
+      - uses: actions/setup-python@v6
+        with:
+          python-version: ${{ matrix.python }}
+      - name: Install editable package
+        run: python -m pip install -e ".[dev]"
+      - name: Test editable package (including native symlinks on Linux)
+        run: python -m pytest -ra
+      - name: Check dependencies
+        run: python -m pip check
+      - name: Build and test isolated wheel outside checkout
+        run: python .github/scripts/verify_wheel.py
+      - name: Install lowest supported direct dependencies
+        run: python -m pip install -e ".[dev]" -c .github/constraints/minimum.txt
+      - name: Test lowest supported direct dependencies
+        run: python -m pytest -ra
+      - name: Check minimum dependency installation
+        run: python -m pip check
