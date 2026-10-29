@@ -1,0 +1,48 @@
+contract_version: "1"
+agent:
+  id: foundation-probe
+  version: "0.1.0"
+  description: Validate the foundation contract without executing an SDLC agent.
+  responsibilities:
+    - Acknowledge a supplied project identifier.
+  capabilities:
+    - foundation.probe
+inputs:
+  schema:
+    type: object
+    properties:
+      project_id:
+        type: string
+        minLength: 1
+    required: [project_id]
+    additionalProperties: false
+outputs:
+  schema:
+    type: object
+    properties:
+      project_id:
+        type: string
+        minLength: 1
+      status:
+        type: string
+        enum: [ok]
+    required: [project_id, status]
+    additionalProperties: false
+tools:
+  allowed: []
+permissions:
+  filesystem:
+    read: false
+    write: false
+  network: false
+  subprocess: false
+  external_write: false
+execution:
+  timeout_seconds: 30
+  max_tool_calls: 0
+  max_model_calls: 0
+errors:
+  retry_policy: none
+observability:
+  tags: [foundation]
+  record_payloads: false

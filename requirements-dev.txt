@@ -1,0 +1,2 @@
+# Dependency declarations live in pyproject.toml.
+-e .[dev]

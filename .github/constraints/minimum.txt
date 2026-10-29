@@ -1,0 +1,6 @@
+# Direct dependency lower bounds declared in pyproject.toml.
+pydantic==2.10.0
+PyYAML==6.0.3
+jsonschema==4.23.0
+typer==0.16.0
+pytest==8.0.0
